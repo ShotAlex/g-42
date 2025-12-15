@@ -22,7 +22,7 @@ class AuthStore {
         if (parsed.state) {
           this.user = parsed.state.user
           this.isAuthenticated = parsed.state.isAuthenticated || false
-          
+
           const tokenFromCookie = authService.getToken()
           if (tokenFromCookie) {
             this.token = tokenFromCookie
@@ -60,8 +60,22 @@ class AuthStore {
           role: response.role,
         }
         this.isAuthenticated = true
-        this.saveToStorage()
       })
+
+      this.saveToStorage()
+
+      try {
+        localStorage.setItem(
+          'auth-storage',
+          JSON.stringify({
+            state: {
+              user: this.user,
+              isAuthenticated: this.isAuthenticated,
+            },
+          })
+        )
+      } catch (error) {
+      }
     } catch (error) {
       throw error
     }

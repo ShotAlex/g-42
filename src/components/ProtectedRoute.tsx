@@ -8,5 +8,7 @@ type ProtectedRouteProps = {
 }
 
 export const ProtectedRoute = observer(({ children }: ProtectedRouteProps) => {
-  return authStore.isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />
+  const isAuthenticated = authStore.isAuthenticated && !!authStore.user
+
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />
 })

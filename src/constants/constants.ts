@@ -1,5 +1,28 @@
+const getApiBaseUrl = (): string => {
+  const envUrl = import.meta.env?.VITE_API_BASE_URL || import.meta.env?.API_BASE_URL
+  if (envUrl) {
+    return envUrl as string
+  }
+  
+  if (typeof window !== 'undefined') {
+    const isNetlify = window.location.hostname.includes('netlify.app')
+    const isProduction = !window.location.hostname.includes('localhost') && 
+                         !window.location.hostname.includes('127.0.0.1')
+    
+    if (isNetlify || isProduction) {
+      const relativeUrl = '/api/v1'
+      console.log('Using relative API URL for production:', relativeUrl)
+      return relativeUrl
+    }
+  }
+  
+  const defaultUrl = 'http://v2991160.hosted-by-vdsina.ru/api/v1'
+  console.log('Using direct API URL for development:', defaultUrl)
+  return defaultUrl
+}
+
 export const API_CONFIG = {
-    BASE_URL: (import.meta.env?.API_BASE_URL as string | undefined) || 'http://v2991160.hosted-by-vdsina.ru/api/v1',
+    BASE_URL: getApiBaseUrl(),
     TIMEOUT: 30000,
   } as const
   
